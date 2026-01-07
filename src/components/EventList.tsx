@@ -17,6 +17,19 @@ export const EventList: React.FC<EventListProps> = ({ events }) => {
   }
 
   const now = new Date();
+
+  const getEventCategoryInfo = (description?: string): { className: string, label: string | null } => {
+    if (!description) return { className: '', label: null };
+    const lowerDesc = description.toLowerCase();
+    
+    if (lowerDesc.includes('#food')) return { className: 'category-food', label: 'Food' };
+    if (lowerDesc.includes('#discussion')) return { className: 'category-discussion', label: 'Discussion' };
+    if (lowerDesc.includes('#teambuilding')) return { className: 'category-teambuilding', label: 'Team Building' };
+    if (lowerDesc.includes('#standup')) return { className: 'category-standup', label: 'Standup' };
+    if (lowerDesc.includes('#important')) return { className: 'category-important', label: 'Important' };
+    
+    return { className: '', label: null };
+  };
   
   return (
     <div className="event-list">
@@ -33,12 +46,13 @@ export const EventList: React.FC<EventListProps> = ({ events }) => {
         
         const cleanTitle = event.title.replace(/@\w+/g, '').trim();
         const isNextUp = index === 0;
+        const { className: categoryClass, label: categoryLabel } = getEventCategoryInfo(event.description);
 
         return (
           <React.Fragment key={index}>
             {showHeader && <h2 className="date-header">{dayString}</h2>}
             
-            <div className={`event-card ${isNow ? 'active-event' : ''} ${isNextUp ? 'next-up-event' : ''}`}>
+            <div className={`event-card ${isNow ? 'active-event' : ''} ${isNextUp ? 'next-up-event' : ''} ${categoryClass}`}>
               <div className="event-time">
                 {event.isAllDay ? (
                   <span className="all-day-badge">All Day</span>
@@ -54,6 +68,9 @@ export const EventList: React.FC<EventListProps> = ({ events }) => {
                 <div className="event-main-content">
                     <h3 className="event-title">{cleanTitle || event.title}</h3>
                     <div className="event-meta">
+                      {categoryLabel && (
+                        <span className="category-label">{categoryLabel}</span>
+                      )}
                       {event.location && (
                         <div className="event-location">
                           <MapPin size={16} />

@@ -169,6 +169,7 @@ body {
   align-items: center;
   gap: 2rem;
   transition: transform 0.2s;
+  border-left: 5px solid transparent;
 }
 
 .event-card.active-event {
@@ -199,6 +200,86 @@ body {
     font-size: 1.3rem;
 }
 
+/* Category Styles */
+.event-card.category-food {
+  border-left-color: #FF9800; /* Orange */
+}
+
+.event-card.category-discussion {
+  border-left-color: #2196F3; /* Blue */
+  background: linear-gradient(90deg, rgba(33, 150, 243, 0.05) 0%, rgba(30, 30, 30, 1) 100%);
+}
+
+.event-card.category-teambuilding {
+  border-left-color: #9C27B0; /* Purple */
+  background: linear-gradient(90deg, rgba(156, 39, 176, 0.05) 0%, rgba(30, 30, 30, 1) 100%);
+}
+
+.event-card.category-standup {
+  border-left-color: #00BCD4; /* Cyan */
+  background: linear-gradient(90deg, rgba(0, 188, 212, 0.05) 0%, rgba(30, 30, 30, 1) 100%);
+}
+
+.event-card.category-important {
+  border-left-color: #F44336; /* Red */
+  background: linear-gradient(90deg, rgba(244, 67, 54, 0.05) 0%, rgba(30, 30, 30, 1) 100%);
+}
+
+.category-label {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+  color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
+  font-weight: 600;
+}
+
+.category-food .category-label {
+    color: #FF9800; 
+    background: rgba(255, 152, 0, 0.1);
+}
+
+.category-discussion .category-label {
+    color: #2196F3;
+    background: rgba(33, 150, 243, 0.1);
+}
+
+.category-teambuilding .category-label {
+    color: #9C27B0;
+    background: rgba(156, 39, 176, 0.1);
+}
+
+.category-standup .category-label {
+    color: #00BCD4;
+    background: rgba(0, 188, 212, 0.1);
+}
+
+.category-important .category-label {
+    color: #F44336;
+    background: rgba(244, 67, 54, 0.1);
+}
+
+/* Ensure active/next-up borders take precedence or blend? 
+   Let's allow specificity to work. The base event-card has border-left, these override the color.
+   active-event and next-up-event are defined AFTER event-card but BEFORE these if I paste at the bottom?
+   No, I am pasting at the very bottom of the file (or end of existing content).
+*/
+
+.event-card.active-event {
+  /* active-event was defined above, so re-declaring border color here if I want active to win */
+  /* If active event is also important, it should probably be red or green?
+     Commonly 'active' (Happening Now) is the most critical state. 
+     But 'Important' is also critical.
+     Let's adding a right border for categories if active?
+     Or just let the category color win for the border because the 'Happening Now' badge exists.
+  */
+}
+
+
 .event-card.next-up-event .assignee-tag {
     font-size: 1.4rem;
     padding: 0.5rem 0.9rem;
@@ -211,8 +292,72 @@ body {
   margin-left: 3.5rem;
 }
 
+
+/* Next Up + Category Overrides */
+
+/* Food (Orange) */
+.event-card.next-up-event.category-food {
+  border-color: #FF9800;
+  box-shadow: 0 7px 28px rgba(255, 152, 0, 0.28);
+}
+.event-card.next-up-event.category-food .event-title {
+  color: #FFB74D;
+}
+.event-card.next-up-event.category-food .event-assignees-right {
+  border-left-color: #FF9800;
+}
+
+/* Discussion (Blue) */
+.event-card.next-up-event.category-discussion {
+  border-color: #2196F3;
+  box-shadow: 0 7px 28px rgba(33, 150, 243, 0.28);
+}
+.event-card.next-up-event.category-discussion .event-title {
+  color: #64B5F6;
+}
+.event-card.next-up-event.category-discussion .event-assignees-right {
+  border-left-color: #2196F3;
+}
+
+/* Team Building (Purple) */
+.event-card.next-up-event.category-teambuilding {
+  border-color: #9C27B0;
+  box-shadow: 0 7px 28px rgba(156, 39, 176, 0.28);
+}
+.event-card.next-up-event.category-teambuilding .event-title {
+  color: #BA68C8;
+}
+.event-card.next-up-event.category-teambuilding .event-assignees-right {
+  border-left-color: #9C27B0;
+}
+
+/* Standup (Cyan) */
+.event-card.next-up-event.category-standup {
+  border-color: #00BCD4;
+  box-shadow: 0 7px 28px rgba(0, 188, 212, 0.28);
+}
+.event-card.next-up-event.category-standup .event-title {
+  color: #4DD0E1;
+}
+.event-card.next-up-event.category-standup .event-assignees-right {
+  border-left-color: #00BCD4;
+}
+
+/* Important (Red) */
+.event-card.next-up-event.category-important {
+  border-color: #F44336;
+  box-shadow: 0 7px 28px rgba(244, 67, 54, 0.28);
+}
+.event-card.next-up-event.category-important .event-title {
+  color: #E57373;
+}
+.event-card.next-up-event.category-important .event-assignees-right {
+  border-left-color: #F44336;
+}
+
 .event-card.next-up-event .assignee-list {
-  gap: 1rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .event-time {

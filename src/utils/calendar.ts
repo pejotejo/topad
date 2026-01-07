@@ -12,7 +12,15 @@ export interface CalendarEvent {
 
 export const fetchAndParseCalendar = async (url: string): Promise<CalendarEvent[]> => {
   const fetchWithProxy = async (proxyUrl: string) => {
-    const response = await fetch(proxyUrl);
+    // Add cache: 'no-store' to prevent browser caching
+    // headers: { 'Cache-Control': 'no-cache' } might also help
+    const response = await fetch(proxyUrl, { 
+      cache: 'no-store',
+      headers: {
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache'
+      }
+    });
     if (!response.ok) {
         throw new Error(`Status: ${response.status} ${response.statusText}`);
     }
@@ -21,12 +29,18 @@ export const fetchAndParseCalendar = async (url: string): Promise<CalendarEvent[
 
   let icsData = '';
   let lastError;
+  
+  // Add a timestamp to the URL to bypass proxy/CDN caches
+  const timestamp = new Date().getTime();
+  const separator = url.includes('?') ? '&' : '?';
+  const urlWithCacheBuster = `${url}${separator}_t=${timestamp}`;
 
   // Try different proxies and direct fetch
   const attempts = [
-    `https://corsproxy.io/?${encodeURIComponent(url)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    url
+    `https://corsproxy.io/?${encodeURIComponent(urlWithCacheBuster)}`,
+    // For allorigins, we can also use disableCache=true
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(urlWithCacheBuster)}&disableCache=true`,
+    urlWithCacheBuster
   ];
 
   for (const attemptUrl of attempts) {
